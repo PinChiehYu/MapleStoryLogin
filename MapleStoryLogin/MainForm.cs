@@ -49,11 +49,22 @@ namespace MapleStoryLogin
                 return;
             }
 
+            bool enableDxwnd = DxwndCheckBox.Checked && DxwndHelper.CheckDLLExist();
+            if (enableDxwnd)
+            {
+                DxwndHelper.StartHooking(Directory.GetCurrentDirectory() + @"\MapleStory.exe");
+            }
+
             List<string> cmds = new List<string>()
             {
                 "start MapleStory.exe " + ip + " " + port
             };
             CommandOutput(cmds);
+
+            if (enableDxwnd)
+            {
+                DxwndHelper.EndHooking();
+            }
         }
         private void TextBox_TextChanged(object sender, EventArgs e)
         {
@@ -95,6 +106,19 @@ namespace MapleStoryLogin
             }
 
             return strOutput;
+        }
+
+        private void DxwndCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (DxwndCheckBox.Checked)
+            {
+                string dxwndVersion = DxwndHelper.GetDLLVersion();
+                DxwndCheckBox.Text = "Dxwnd版本：" + dxwndVersion;
+            }
+            else
+            {
+                DxwndCheckBox.Text = "啟用視窗化";
+            }
         }
     }
 }
