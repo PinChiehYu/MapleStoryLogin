@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -14,15 +15,21 @@ namespace MapleStoryLogin
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            bool isExist = CheckMapleStoryExeExist();
-            SetAnnouncement(isExist ? "檢測完成" : "找不到MapleStory.exe!", !isExist);
+            CheckMapleStoryExeExist();
         }
 
-        private bool CheckMapleStoryExeExist()
+        private void CheckMapleStoryExeExist()
         {
             string directory = Directory.GetCurrentDirectory();
+            bool isExist = File.Exists(directory + @"\MapleStory.exe");
 
-            return File.Exists(directory + @"\MapleStory.exe");
+            if (!isExist)
+            {
+                IPTextBox.Enabled = false;
+                PortTextBox.Enabled = false;
+            }
+
+            SetAnnouncement(isExist ? "檢測完成" : "找不到MapleStory.exe!", !isExist);
         }
 
         private void StartButton_Click(object sender, EventArgs e)
@@ -36,13 +43,21 @@ namespace MapleStoryLogin
                 return;
             }
 
-            if (Int32.TryParse(port, out _))
+            if (!ushort.TryParse(port, out _))
             {
                 SetAnnouncement("Port輸入不合法!", true);
                 return;
             }
 
-            CommandOutput("start MapleStory.exe " + ip + " " + port);
+            List<string> cmds = new List<string>()
+            {
+                "start MapleStory.exe " + ip + " " + port
+            };
+            CommandOutput(cmds);
+        }
+        private void TextBox_TextChanged(object sender, EventArgs e)
+        {
+            StartButton.Enabled = (IPTextBox.Text != "" && PortTextBox.Text != "");
         }
 
         private void SetAnnouncement(string announcement, bool isEmergent)
@@ -50,7 +65,7 @@ namespace MapleStoryLogin
             Announcement.Text = announcement;
             Announcement.ForeColor = isEmergent ? Color.Red : Color.Black;
         }
-        private string CommandOutput(string commandText)
+        private string CommandOutput(List<string> commandTexts)
         {
             System.Diagnostics.Process process = new System.Diagnostics.Process();
             process.StartInfo.FileName = "cmd.exe";
@@ -65,7 +80,10 @@ namespace MapleStoryLogin
             {
                 process.Start();
 
-                process.StandardInput.WriteLine(commandText);
+                foreach(string cmd in commandTexts)
+                {
+                    process.StandardInput.WriteLine(cmd);
+                }
                 process.StandardInput.WriteLine("exit");
                 strOutput = process.StandardOutput.ReadToEnd();
                 process.WaitForExit();
