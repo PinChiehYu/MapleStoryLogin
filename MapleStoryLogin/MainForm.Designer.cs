@@ -29,6 +29,7 @@ namespace MapleStoryLogin
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.IPTextBox = new System.Windows.Forms.TextBox();
             this.PortTextBox = new System.Windows.Forms.TextBox();
@@ -38,6 +39,7 @@ namespace MapleStoryLogin
             this.Announcement = new System.Windows.Forms.Label();
             this.ConnectInfoGroupBox = new System.Windows.Forms.GroupBox();
             this.DxwndCheckBox = new System.Windows.Forms.CheckBox();
+            this.NotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.ConnectInfoGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -133,6 +135,13 @@ namespace MapleStoryLogin
             this.DxwndCheckBox.UseVisualStyleBackColor = true;
             this.DxwndCheckBox.CheckedChanged += new System.EventHandler(this.DxwndCheckBox_CheckedChanged);
             // 
+            // NotifyIcon
+            // 
+            this.NotifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("NotifyIcon.Icon")));
+            this.NotifyIcon.Text = "楓之谷啟動器";
+            this.NotifyIcon.Visible = false;
+            this.NotifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.NotifyIcon_MouseDoubleClick);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 19F);
@@ -168,6 +177,7 @@ namespace MapleStoryLogin
         private System.Windows.Forms.Button StartButton;
         private System.Windows.Forms.Label Announcement;
         private System.Windows.Forms.CheckBox DxwndCheckBox;
+        private System.Windows.Forms.NotifyIcon NotifyIcon;
     }
 }
 

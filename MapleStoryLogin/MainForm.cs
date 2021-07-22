@@ -70,6 +70,9 @@ namespace MapleStoryLogin
                 dxwndIsActivated = true;
             }
 
+            NotifyIcon.Visible = true;
+            Hide();
+
             List<string> cmds = new List<string>()
             {
                 "taskkill /f /im RuntimeBroker.exe",
@@ -138,6 +141,14 @@ namespace MapleStoryLogin
             {
                 DxwndHelper.EndHooking();
             }
+        }
+
+        private void NotifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            NotifyIcon.Visible = false;
+            WindowState = FormWindowState.Normal;
+            Show();
+            BringToFront();
         }
     }
 }
