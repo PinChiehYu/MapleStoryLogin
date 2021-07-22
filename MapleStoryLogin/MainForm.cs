@@ -8,6 +8,11 @@ namespace MapleStoryLogin
 {
     public partial class MainForm : Form
     {
+        string MSExeFullPath = "";
+        private bool isMSExeExist = false;
+        private bool isDxwndExist = false;
+        private bool dxwndIsActivated = false;
+
         public MainForm()
         {
             InitializeComponent();
@@ -15,21 +20,31 @@ namespace MapleStoryLogin
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            CheckMapleStoryExeExist();
+            CheckProgramExist();
         }
 
-        private void CheckMapleStoryExeExist()
+        private void CheckProgramExist()
         {
             string directory = Directory.GetCurrentDirectory();
-            bool isExist = File.Exists(directory + @"\MapleStory.exe");
+            MSExeFullPath = directory + @"\MapleStory.exe";
+            isMSExeExist = File.Exists(MSExeFullPath);
 
-            if (!isExist)
+            if (!isMSExeExist)
             {
                 IPTextBox.Enabled = false;
                 PortTextBox.Enabled = false;
+                StartButton.Enabled = false;
             }
 
-            SetAnnouncement(isExist ? "檢測完成" : "找不到MapleStory.exe!", !isExist);
+            SetAnnouncement(isMSExeExist ? "檢測完成" : "找不到MapleStory.exe", !isMSExeExist);
+
+
+            isDxwndExist = File.Exists(@"dxwnd.dll");
+            if (!isDxwndExist)
+            {
+                DxwndCheckBox.Enabled = false;
+                DxwndCheckBox.Text = "找不到dxwnd.dll";
+            }
         }
 
         private void StartButton_Click(object sender, EventArgs e)
@@ -49,22 +64,18 @@ namespace MapleStoryLogin
                 return;
             }
 
-            bool enableDxwnd = DxwndCheckBox.Checked && DxwndHelper.CheckDLLExist();
-            if (enableDxwnd)
+            if (isDxwndExist && DxwndCheckBox.Checked)
             {
-                DxwndHelper.StartHooking(Directory.GetCurrentDirectory() + @"\MapleStory.exe");
+                DxwndHelper.StartHooking(MSExeFullPath);
+                dxwndIsActivated = true;
             }
 
             List<string> cmds = new List<string>()
             {
+                "taskkill /f /im RuntimeBroker.exe",
                 "start MapleStory.exe " + ip + " " + port
             };
             CommandOutput(cmds);
-
-            if (enableDxwnd)
-            {
-                DxwndHelper.EndHooking();
-            }
         }
         private void TextBox_TextChanged(object sender, EventArgs e)
         {
@@ -85,7 +96,7 @@ namespace MapleStoryLogin
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.RedirectStandardError = true;
             process.StartInfo.CreateNoWindow = true;
-            string strOutput = null;
+            string strOutput = "";
 
             try
             {
@@ -96,7 +107,7 @@ namespace MapleStoryLogin
                     process.StandardInput.WriteLine(cmd);
                 }
                 process.StandardInput.WriteLine("exit");
-                strOutput = process.StandardOutput.ReadToEnd();
+                process.StandardOutput.ReadToEnd();
                 process.WaitForExit();
                 process.Close();
             }
@@ -118,6 +129,14 @@ namespace MapleStoryLogin
             else
             {
                 DxwndCheckBox.Text = "啟用視窗化";
+            }
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (dxwndIsActivated)
+            {
+                DxwndHelper.EndHooking();
             }
         }
     }

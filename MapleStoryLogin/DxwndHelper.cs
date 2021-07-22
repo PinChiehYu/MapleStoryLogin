@@ -3,11 +3,12 @@ using System.IO;
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 namespace MapleStoryLogin
 {
-    [StructLayout(LayoutKind.Sequential)]
-    struct TARGETMAP
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    internal struct TARGETMAP
     {
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
         public string path;
@@ -23,23 +24,21 @@ namespace MapleStoryLogin
 
     public unsafe class DxwndHelper
     {
-        [DllImport(@".\dxwnd.dll", EntryPoint = "SetTarget")]
-        private static extern void SetTarget(string msg);
-        [DllImport(@".\dxwnd.dll", EntryPoint = "StartHook")]
-        private static extern void StartHook(ref TARGETMAP tgmap);
-        [DllImport(@".\dxwnd.dll", EntryPoint = "EndHook")]
-        private static extern void EndHook();
-        [DllImport(@".\dxwnd.dll", EntryPoint = "GetDllVersion")]
+        [DllImport(@"dxwnd.dll", EntryPoint = "SetTarget")]
+        private static extern int SetTarget(TARGETMAP[] tgmaps);
+        [DllImport(@"dxwnd.dll", EntryPoint = "StartHook")]
+        private static extern int StartHook();
+        [DllImport(@"dxwnd.dll", EntryPoint = "EndHook")]
+        private static extern int EndHook();
+        [DllImport(@"dxwnd.dll", EntryPoint = "GetDllVersion")]
         private static extern void GetDllVersion(IntPtr dest);
-
-        public static bool CheckDLLExist()
-        {
-            return File.Exists(@".\dxwnd.dll");
-        }
 
         public static void StartHooking(string exeFullPath)
         {
-            TARGETMAP map = new TARGETMAP
+            MessageBox.Show("目標路徑：" + exeFullPath);
+
+            TARGETMAP[] maps = new TARGETMAP[256];
+            maps[0] = new TARGETMAP
             {
                 path = exeFullPath,
                 dxversion = 8,
@@ -51,8 +50,9 @@ namespace MapleStoryLogin
                 maxx = 639,
                 maxy = 479
             };
-            
-            StartHook(ref map);
+
+            SetTarget(maps);
+            StartHook();
         }
 
         public static void EndHooking()

@@ -48,6 +48,7 @@ namespace MapleStoryLogin
             this.IPTextBox.Name = "IPTextBox";
             this.IPTextBox.Size = new System.Drawing.Size(214, 27);
             this.IPTextBox.TabIndex = 1;
+            this.IPTextBox.Text = "26.68.76.132";
             this.IPTextBox.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
             // 
             // PortTextBox
@@ -57,6 +58,7 @@ namespace MapleStoryLogin
             this.PortTextBox.Name = "PortTextBox";
             this.PortTextBox.Size = new System.Drawing.Size(214, 27);
             this.PortTextBox.TabIndex = 2;
+            this.PortTextBox.Text = "8484";
             this.PortTextBox.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
             // 
             // IPTextBoxLabel
@@ -81,7 +83,6 @@ namespace MapleStoryLogin
             // 
             // StartButton
             // 
-            this.StartButton.Enabled = false;
             this.StartButton.Location = new System.Drawing.Point(246, 239);
             this.StartButton.Margin = new System.Windows.Forms.Padding(4);
             this.StartButton.Name = "StartButton";
@@ -149,6 +150,7 @@ namespace MapleStoryLogin
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "楓之谷啟動器";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.ConnectInfoGroupBox.ResumeLayout(false);
             this.ConnectInfoGroupBox.PerformLayout();
