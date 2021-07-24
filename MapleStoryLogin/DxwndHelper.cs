@@ -19,7 +19,7 @@ namespace MapleStoryLogin
         public int maxy;
     };
 
-    public unsafe class DxwndHelper
+    public class DxwndHelper
     {
         [DllImport(@"dxwnd.dll", EntryPoint = "SetTarget")]
         private static extern int SetTarget(TARGETMAP[] tgmaps);

@@ -50,7 +50,6 @@ namespace MapleStoryLogin
             this.IPTextBox.Name = "IPTextBox";
             this.IPTextBox.Size = new System.Drawing.Size(214, 27);
             this.IPTextBox.TabIndex = 1;
-            this.IPTextBox.Text = "26.68.76.132";
             this.IPTextBox.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
             // 
             // PortTextBox
@@ -60,7 +59,6 @@ namespace MapleStoryLogin
             this.PortTextBox.Name = "PortTextBox";
             this.PortTextBox.Size = new System.Drawing.Size(214, 27);
             this.PortTextBox.TabIndex = 2;
-            this.PortTextBox.Text = "8484";
             this.PortTextBox.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
             // 
             // IPTextBoxLabel

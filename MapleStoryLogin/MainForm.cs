@@ -20,10 +20,10 @@ namespace MapleStoryLogin
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            CheckProgramExist();
+            CheckResourceExist();
         }
 
-        private void CheckProgramExist()
+        private void CheckResourceExist()
         {
             string directory = Directory.GetCurrentDirectory();
             MSExeFullPath = directory + @"\MapleStory.exe";
@@ -33,17 +33,25 @@ namespace MapleStoryLogin
             {
                 IPTextBox.Enabled = false;
                 PortTextBox.Enabled = false;
+                DxwndCheckBox.Enabled = false;
                 StartButton.Enabled = false;
             }
-
             SetAnnouncement(isMSExeExist ? "檢測完成" : "找不到MapleStory.exe", !isMSExeExist);
-
 
             isDxwndExist = File.Exists(@"dxwnd.dll");
             if (!isDxwndExist)
             {
                 DxwndCheckBox.Enabled = false;
                 DxwndCheckBox.Text = "找不到dxwnd.dll";
+            }
+
+            ConfigHelper.LoadConfig();
+
+            IPTextBox.Text = ConfigHelper.IP;
+            PortTextBox.Text = ConfigHelper.Port;
+            if (isDxwndExist)
+            {
+                DxwndCheckBox.Checked = ConfigHelper.UseDxwnd;
             }
         }
 
@@ -141,6 +149,8 @@ namespace MapleStoryLogin
             {
                 DxwndHelper.EndHooking();
             }
+
+            ConfigHelper.SaveConfig(IPTextBox.Text, PortTextBox.Text, DxwndCheckBox.Checked);
         }
 
         private void NotifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
